@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alar_02</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .app {
+        /* min-height: 100vh; */
+    }
+    #input {
+        display: block;
+        width: fit-content;
+        margin: auto;
+        margin-top: 1em;
+    }
+    .list table {
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40%;
+        margin: 1em;
+        border-collapse: collapse;
+        font-family: arial, sans-serif;
+    }
+    tr, th {
+        border: 1px solid #dddddd;
+    }
+    #input tr, #input th {
+        border: none;
+    }
+    th {
+        padding: 1em;
+    }
+    .tr__buttons {
+        padding: 0;
+    }
+    button {
+        height: 3em;
+        width: 4em;
+    }
+    tr:nth-child(even) {
+        background-color: #bbbbbb;
+    }
+    input {
+        font-size: 1.5em;
+        width: 10em;
+        height: 2em;
+        margin: 5px 5px;
+        border-radius: 5px;
+        border: none;
+        box-shadow: 0px 3px 6px;
+        transition-duration: .5s;
+    }
+    input:focus {
+        outline: none;
+        box-shadow: 0px 1px 2px;
+    }
+</style>
+<body>
+    <hr>
+    <div class="app">
+        <div class="list">
+            <table></table>
+        </div>
+        <hr style="border: 2px dashed rgba(0, 0, 0, 0.1);">
+        <section id="input">
+            <table>
+                <tr>
+                    <th class="tr__buttons">
+                        <input type="text">
+                    </th>
+                    <th class="tr__buttons">
+                        <input type="text">
+                    </th>
+                    <th class="tr__buttons">
+                        <button onclick="createFunc(this)">Create</button>
+                    </th>
+                </tr>
+            </table>
+        </section>
+    </div>
+</body>
+<script>
+
+    let db = [["Евгений Пономарев", "+380962468671"], ["Lorem, ipsum dolor.", "+380962468671"], ["Lorem, ipsum.", "+380962468671"], ["Lorem.", "+380962468671"], ["Lorem ipsum dolor sit.", "+380962468671"]];   
+
+    function buildUp() {
+
+        let table = document.querySelector(".list table");
+        if (table.hasChildNodes()) {
+            let list = document.querySelector(".list");
+            list.removeChild(table);
+            list.appendChild(document.createElement("table"));
+        }
+        
+       db.forEach((elem, ind) => {
+        let tr = document.createElement("tr");
+
+        tr.innerHTML = `<th>${elem[0]}</th>
+                        <th>${elem[1]}</th>
+                        <th class="tr__buttons">
+                            <button data-index="${ind}" onclick="editFunc(this)">Edit</button>
+                            <button data-index="${ind}" onclick="deleteFunc(this)">Delete</button>
+                        </th>`;
+        document.querySelector("table").appendChild(tr);
+        }); 
+    }
+
+    buildUp();
+
+    function editFunc(e) {
+        let tr = e.parentNode.parentNode;
+        let thName = tr.childNodes[0];
+        let thNumber = tr.childNodes[1];
+
+        
+    }
+
+    function deleteFunc(e) {
+        db.splice(e.dataset.index, 1);
+        buildUp();
+    }
+
+    function createFunc(e) {
+        
+    }
+
+</script>
+</html>
