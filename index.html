@@ -54,9 +54,7 @@
     let 
         star = [[17, 50], [70, 50], [25, 77], [45, 135], [0, 95], [-45, 135], [-25, 77], [-70, 50], [-17, 50]],
         positions = [[450, 50], [450, 200], [450, 350], [450, 500], [450, 650]],
-        colors = ['red', 'blue', 'green', 'yellow', 'black'],
-        starsCoords = [];
-        // positions = [[200, 50], [400, 50], [600, 50], [800, 50], [1000, 50]]
+        colors = ['red', 'blue', 'green', 'yellow', 'black'];
 
     // ************DRAWING STARS
     positions.forEach((pos, ind) => {
@@ -76,12 +74,10 @@
     context.stroke();
     context.fill();
 
-    currentStar.unshift(pos)
-    starsCoords.push(currentStar); // SAVING COORDINATES FOR A CURRENT STAR
+
 
     })
 
-    // console.log(starsCoords)
     context02.fillStyle = 'white';
     context02.fillRect(0, 0, canvas02.width, canvas02.height);
     context02.fill();
