@@ -14,6 +14,9 @@
     .app {
         /* min-height: 100vh; */
     }
+    .list {
+        min-height: 50vh;
+    }
     #input {
         display: block;
         width: fit-content;
@@ -40,19 +43,29 @@
     }
     .tr__buttons {
         padding: 0;
+        user-select: none;
     }
     button {
         height: 3em;
         width: 4em;
+        border-radius: 5px;
+        border-bottom: double;
     }
     tr:nth-child(even) {
         background-color: #bbbbbb;
+    }
+    .input__edit {
+        font-size: 1rem;
+        height: 1.5em;
+        margin: 0;
+        box-shadow: 0px 2px 4px;
     }
     input {
         font-size: 1.5em;
         width: 10em;
         height: 2em;
         margin: 5px 5px;
+        padding-left: 5px;
         border-radius: 5px;
         border: none;
         box-shadow: 0px 3px 6px;
@@ -89,8 +102,10 @@
 </body>
 <script>
 
-    let db = [["Евгений Пономарев", "+380962468671"], ["Lorem, ipsum dolor.", "+380962468671"], ["Lorem, ipsum.", "+380962468671"], ["Lorem.", "+380962468671"], ["Lorem ipsum dolor sit.", "+380962468671"]];   
+    // DATA BASE
+    const db = [["Евгений Пономарев", "+380962468671"], ["Lorem, ipsum dolor.", "+380962468671"], ["Lorem, ipsum.", "+380962468671"], ["Lorem.", "+380962468671"], ["Eugene Ponomarov", "+971508979966"]];   
 
+    // RENDERING THE LIST
     function buildUp() {
 
         let table = document.querySelector(".list table");
@@ -115,21 +130,68 @@
 
     buildUp();
 
+    // EDITING
     function editFunc(e) {
-        let tr = e.parentNode.parentNode;
-        let thName = tr.childNodes[0];
-        let thNumber = tr.childNodes[1];
+        if (!document.querySelectorAll('.input__edit').length || e.innerText === "Save") {
+            if (e.innerText === "Edit") {
+                e.innerText = "Save";
 
-        
+                let tr = e.parentNode.parentNode;
+                let thName = tr.childNodes[0];
+                let thNumber = tr.childNodes[2];
+
+                let inputName = document.createElement("input");
+                let inputNumber = document.createElement("input");
+
+                inputName.setAttribute('value', thName.innerText);
+                inputName.setAttribute('class', "input__edit");
+                inputNumber.setAttribute('value', thNumber.innerText);
+                inputNumber.setAttribute('class', "input__edit");
+
+                thName.innerText = '';
+                thNumber.innerText = '';
+
+                thName.appendChild(inputName);
+                thNumber.appendChild(inputNumber);
+
+
+            } else {
+                e.innerText = "Edit";
+                saveEdits(e);
+            }
+        }
     }
 
+    // SAVING CHANGINGS
+    function saveEdits(e) {
+        let data = document.querySelectorAll('.input__edit');
+        let newName = data[0].value;
+        let newNumber = data[1].value;
+
+        data[0].parentElement.innerHTML = newName;
+        data[1].parentElement.innerHTML = newNumber;
+        
+        db[e.dataset.index] = [newName, newNumber];
+    }
+
+    // DELETING THE PERSON
     function deleteFunc(e) {
         db.splice(e.dataset.index, 1);
         buildUp();
     }
 
+    // CREATING NEW PERSON IN THE LIST
     function createFunc(e) {
-        
+        let parent = e.parentElement.parentElement;
+        let newName = parent.childNodes[1].childNodes[1];
+        let newNumber = parent.childNodes[3].childNodes[1];
+
+        db.push([newName.value, newNumber.value]);
+
+        newName.value = '';
+        newNumber.value = '';
+
+        buildUp();
     }
 
 </script>
