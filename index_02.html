@@ -11,9 +11,7 @@
         padding: 0;
         box-sizing: border-box;
     }
-    .app {
-        /* min-height: 100vh; */
-    }
+
     .list {
         min-height: 50vh;
     }
@@ -51,6 +49,13 @@
         border-radius: 5px;
         border-bottom: double;
     }
+    button:active {
+        border-bottom: solid;
+        border-width: 1px;
+    }
+    button:focus {
+        outline: none;
+    }
     tr:nth-child(even) {
         background-color: #bbbbbb;
     }
@@ -75,6 +80,13 @@
         outline: none;
         box-shadow: 0px 1px 2px;
     }
+    .save {
+        background-color: rgb(0 255 112);
+    }
+    .create_button:active {
+        background-color: #000000;
+        color: #aaaaaa;
+    }
 </style>
 <body>
     <hr>
@@ -93,7 +105,7 @@
                         <input type="text">
                     </th>
                     <th class="tr__buttons">
-                        <button onclick="createFunc(this)">Create</button>
+                        <button class="create_button" onclick="createFunc(this)">Create</button>
                     </th>
                 </tr>
             </table>
@@ -103,7 +115,7 @@
 <script>
 
     // DATA BASE
-    const db = [["Евгений Пономарев", "+380962468671"], ["Lorem, ipsum dolor.", "+380962468671"], ["Lorem, ipsum.", "+380962468671"], ["Lorem.", "+380962468671"], ["Eugene Ponomarov", "+971508979966"]];   
+    const DB = [["Евгений Пономарев", "+380962468671"], ["Lorem, ipsum dolor.", "+380962468671"], ["Lorem, ipsum.", "+380962468671"], ["Lorem.", "+380962468671"], ["Eugene Ponomarov", "+971508979966"]];   
 
     // RENDERING THE LIST
     function buildUp() {
@@ -115,7 +127,7 @@
             list.appendChild(document.createElement("table"));
         }
         
-       db.forEach((elem, ind) => {
+       DB.forEach((elem, ind) => {
         let tr = document.createElement("tr");
 
         tr.innerHTML = `<th>${elem[0]}</th>
@@ -135,6 +147,7 @@
         if (!document.querySelectorAll('.input__edit').length || e.innerText === "Save") {
             if (e.innerText === "Edit") {
                 e.innerText = "Save";
+                e.classList.toggle("save");
 
                 let tr = e.parentNode.parentNode;
                 let thName = tr.childNodes[0];
@@ -148,6 +161,7 @@
                 inputNumber.setAttribute('value', thNumber.innerText);
                 inputNumber.setAttribute('class', "input__edit");
 
+
                 thName.innerText = '';
                 thNumber.innerText = '';
 
@@ -157,6 +171,7 @@
 
             } else {
                 e.innerText = "Edit";
+                e.classList.toggle("save");
                 saveEdits(e);
             }
         }
@@ -168,31 +183,51 @@
         let newName = data[0].value;
         let newNumber = data[1].value;
 
-        data[0].parentElement.innerHTML = newName;
-        data[1].parentElement.innerHTML = newNumber;
-        
-        db[e.dataset.index] = [newName, newNumber];
+        if (validation(newName, newNumber)) {
+            data[0].parentElement.innerHTML = newName;
+            data[1].parentElement.innerHTML = newNumber;
+            DB[e.dataset.index] = [newName, newNumber];
+        } else {
+            console.log("fail edit")
+        }
     }
 
     // DELETING THE PERSON
     function deleteFunc(e) {
-        db.splice(e.dataset.index, 1);
+        DB.splice(e.dataset.index, 1);
         buildUp();
     }
 
     // CREATING NEW PERSON IN THE LIST
     function createFunc(e) {
+
         let parent = e.parentElement.parentElement;
         let newName = parent.childNodes[1].childNodes[1];
         let newNumber = parent.childNodes[3].childNodes[1];
+        
+        if (validation(newName.value, newNumber.value)) {
+            DB.push([newName.value, newNumber.value]);
 
-        db.push([newName.value, newNumber.value]);
+            newName.value = '';
+            newNumber.value = '';
 
-        newName.value = '';
-        newNumber.value = '';
-
-        buildUp();
+            buildUp();
+        } else {
+            console.log("fail")
+        }  
     }
 
+    // VALIDATION FUNCTION
+    function validation(newName, newNumber) {
+        let validationName = newName.match(/(([a-z]|[A-Z]|[ ])+){2,}/g); 
+        let validationNumber = newNumber.match(/((^[+]|^\d+|[-])([-]|)?(\d{2,}))+/g);
+
+        if (validationName && validationName[0].length === newName.length &&
+            validationNumber && validationNumber[0].length === newNumber.length && newNumber.length >= 6 && newNumber.length <= 10 ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 </script>
 </html>
