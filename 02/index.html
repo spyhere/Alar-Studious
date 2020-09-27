@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Alar_02</title>
+</head>
+<body>
+    <div class="warning" style="display: none">
+        <div class="warning__descr">
+            <h1>Error</h1>
+            <p>Name with minumum 2 letters for name (only letters)</p>
+            <p>Number: minimum 6 digits</p>
+        </div>
+    </div>
+    <hr>
+    <div class="app">
+        <div class="list">
+            <table></table>
+        </div>
+        <hr style="border: 2px dashed rgba(0, 0, 0, 0.1);">
+        <section id="input">
+            <table>
+                <tr>
+                    <th class="tr__buttons">
+                        <input type="text">
+                    </th>
+                    <th class="tr__buttons">
+                        <input type="text">
+                    </th>
+                    <th class="tr__buttons">
+                        <button class="create_button" onclick="createFunc(this)">Create</button>
+                    </th>
+                </tr>
+            </table>
+        </section>
+    </div>
+</body>
+<script src="script.js"></script>
+</html>

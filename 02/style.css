@@ -1,0 +1,103 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.list {
+    min-height: 50vh;
+}
+#input {
+    display: block;
+    width: fit-content;
+    margin: auto;
+    margin-top: 1em;
+}
+.list table {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    margin: 1em;
+    border-collapse: collapse;
+    font-family: arial, sans-serif;
+}
+tr, th {
+    border: 1px solid #dddddd;
+}
+#input tr, #input th {
+    border: none;
+}
+th {
+    padding: 1em;
+}
+.tr__buttons {
+    padding: 0;
+    user-select: none;
+}
+button {
+    height: 3em;
+    width: 4em;
+    border-radius: 5px;
+    border-bottom: double;
+}
+button:active {
+    border-bottom: solid;
+    border-width: 1px;
+}
+button:focus {
+    outline: none;
+}
+tr:nth-child(even) {
+    background-color: #bbbbbb;
+}
+.input__edit {
+    font-size: 1rem;
+    height: 1.5em;
+    margin: 0;
+    box-shadow: 0px 2px 4px;
+}
+input {
+    font-size: 1.5em;
+    width: 10em;
+    height: 2em;
+    margin: 5px 5px;
+    padding-left: 5px;
+    border-radius: 5px;
+    border: none;
+    box-shadow: 0px 3px 6px;
+    transition-duration: .5s;
+}
+input:focus {
+    outline: none;
+    box-shadow: 0px 1px 2px;
+}
+.save {
+    background-color: rgb(0 255 112);
+}
+.create_button:active {
+    background-color: #000000;
+    color: #aaaaaa;
+}
+.warning {
+    display: none;
+    position: absolute;
+    pointer-events: none;
+    min-width: 100px;
+    min-height: 50px;
+    background-color: azure;
+    border: 1px dashed;
+    border-radius: 10px;
+    opacity: 1;
+    z-index: 100;
+    animation: warning_fadeOut 2s ease-in-out 2s 1 forwards;
+}
+.warning__descr {
+    padding: 1em;
+}
+.warning__descr h1 {
+    font-size: 1.5em;
+}
+@keyframes warning_fadeOut {
+    100% {opacity: 0;}
+}
