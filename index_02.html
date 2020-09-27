@@ -87,8 +87,37 @@
         background-color: #000000;
         color: #aaaaaa;
     }
+    .warning {
+        display: none;
+        position: absolute;
+        pointer-events: none;
+        min-width: 100px;
+        min-height: 50px;
+        background-color: azure;
+        border: 1px dashed;
+        border-radius: 10px;
+        opacity: 1;
+        z-index: 100;
+        animation: warning_fadeOut 2s ease-in-out 2s 1 forwards;
+    }
+    .warning__descr {
+        padding: 1em;
+    }
+    .warning__descr h1 {
+        font-size: 1.5em;
+    }
+    @keyframes warning_fadeOut {
+        100% {opacity: 0;}
+    }
 </style>
 <body>
+    <div class="warning" style="display: none">
+        <div class="warning__descr">
+            <h1>Error</h1>
+            <p>Name with minumum 2 letters for name (only letters)</p>
+            <p>Number: min 6, max 13 digits</p>
+        </div>
+    </div>
     <hr>
     <div class="app">
         <div class="list">
@@ -114,8 +143,29 @@
 </body>
 <script>
 
+
+
     // DATA BASE
-    const DB = [["Евгений Пономарев", "+380962468671"], ["Lorem, ipsum dolor.", "+380962468671"], ["Lorem, ipsum.", "+380962468671"], ["Lorem.", "+380962468671"], ["Eugene Ponomarov", "+971508979966"]];   
+    let db = [["Евгений Пономарев", "+380962468671"], ["Lorem ipsum dolor", "+380962468671"], ["Lorem ipsum", "+380962468671"], ["Lorem", "+380962468671"], ["Eugene Ponomarov", "+971508979966"]];   
+
+
+    // AJAX
+    // var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+    // const req = new XMLHttpRequest();
+    // req.open("GET", '/json/db', true);
+    // req.timeout = 10000;
+    // req.send();
+
+    // req.onload = () => {
+    //     if (req.status !== 200) {
+    //         console.log("Error");
+    //     } else {
+    //         db = JSON.parse(req.responseText);
+    //     }
+    // }
+    // req.onerror = (error) => {
+    //     console.error(error);
+    // }
 
     // RENDERING THE LIST
     function buildUp() {
@@ -127,7 +177,7 @@
             list.appendChild(document.createElement("table"));
         }
         
-       DB.forEach((elem, ind) => {
+       db.forEach((elem, ind) => {
         let tr = document.createElement("tr");
 
         tr.innerHTML = `<th>${elem[0]}</th>
@@ -161,17 +211,12 @@
                 inputNumber.setAttribute('value', thNumber.innerText);
                 inputNumber.setAttribute('class', "input__edit");
 
-
                 thName.innerText = '';
                 thNumber.innerText = '';
 
                 thName.appendChild(inputName);
                 thNumber.appendChild(inputNumber);
-
-
             } else {
-                e.innerText = "Edit";
-                e.classList.toggle("save");
                 saveEdits(e);
             }
         }
@@ -186,16 +231,27 @@
         if (validation(newName, newNumber)) {
             data[0].parentElement.innerHTML = newName;
             data[1].parentElement.innerHTML = newNumber;
-            DB[e.dataset.index] = [newName, newNumber];
+            db[e.dataset.index] = [newName, newNumber];
+
+            e.innerText = "Edit";
+            e.classList.toggle("save");
+
+            // AJAX
+            // req.open("POST", '/json/db', true);
+            // req.send(JSON.stringify(db));
         } else {
-            console.log("fail edit")
+            warningPopOut(e);
         }
     }
 
     // DELETING THE PERSON
     function deleteFunc(e) {
-        DB.splice(e.dataset.index, 1);
+        db.splice(e.dataset.index, 1);
         buildUp();
+
+        // AJAX
+        // req.open("POST", '/json/db', true);
+        // req.send(JSON.stringify(db));
     }
 
     // CREATING NEW PERSON IN THE LIST
@@ -206,28 +262,45 @@
         let newNumber = parent.childNodes[3].childNodes[1];
         
         if (validation(newName.value, newNumber.value)) {
-            DB.push([newName.value, newNumber.value]);
+            db.push([newName.value, newNumber.value]);
 
             newName.value = '';
             newNumber.value = '';
 
             buildUp();
+
+            // AJAX
+            // req.open("POST", '/json/db', true);
+            // req.send(JSON.stringify(db));
         } else {
-            console.log("fail")
+            warningPopOut(e);
+            
         }  
     }
 
     // VALIDATION FUNCTION
     function validation(newName, newNumber) {
-        let validationName = newName.match(/(([a-z]|[A-Z]|[ ])+){2,}/g); 
+        let validationName = newName.match(/(([a-z]|[A-Z]|[\u0400-\u04FF]|[ ])+){2,}/g); 
         let validationNumber = newNumber.match(/((^[+]|^\d+|[-])([-]|)?(\d{2,}))+/g);
 
         if (validationName && validationName[0].length === newName.length &&
-            validationNumber && validationNumber[0].length === newNumber.length && newNumber.length >= 6 && newNumber.length <= 10 ) {
+            validationNumber && validationNumber[0].length === newNumber.length && newNumber.length >= 6 && newNumber.length <= 13 ) {
             return true;
         } else {
             return false;
         }
+    }
+
+    // WARNING POPOUT
+    function warningPopOut(e) {
+        let warning = document.querySelector(".warning");
+            if (warning.style.display === "none") {
+                warning.style.display = "block";
+                let coordinates = e.getBoundingClientRect();
+                warning.style.top = `${coordinates.top - warning.getBoundingClientRect().height - 3}px`;
+                warning.style.left = coordinates.left - warning.getBoundingClientRect().width / 4 + "px";
+                setTimeout(() => warning.style.display = "none", 4000);
+            }
     }
 </script>
 </html>
